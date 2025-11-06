@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Movie, MovieResponse } from '../../domain/entities/movie';
-import { GetPopularMovies } from '../../domain/usecases/get-popular-movies';
+import { movieContainer } from '../../di';
 
 interface UseMoviesState {
   movies: Movie[];
@@ -17,7 +17,7 @@ interface UseMoviesReturn extends UseMoviesState {
   refresh: () => Promise<void>;
 }
 
-export const useMovies = (getPopularMovies: GetPopularMovies): UseMoviesReturn => {
+export const useMovies = (): UseMoviesReturn => {
   const [state, setState] = useState<UseMoviesState>({
     movies: [],
     loading: false,
@@ -31,6 +31,7 @@ export const useMovies = (getPopularMovies: GetPopularMovies): UseMoviesReturn =
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
+      const getPopularMovies = movieContainer.getPopularMoviesUseCase();
       const response: MovieResponse = await getPopularMovies.execute(page);
 
       setState(prev => ({

@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import type { Movie } from "../../../domain/entities/movie";
 import { useMovies } from "../../hooks/use-movies";
 import { MovieList } from "../components/movie-list";
-import { movieContainer } from "../../../di";
 
 /**
  * 📍 PRESENTATION LAYER - SECTION
@@ -14,11 +13,9 @@ import { movieContainer } from "../../../di";
  */
 
 function MoviesSectionContent() {
-  // 이 섹션에서 필요한 UseCase를 직접 가져오기
   // TODO: 추후 tanstack query를 이용하며 수정 예정
-  const getPopularMovies = movieContainer.getPopularMoviesUseCase();
   const { movies, loading, error, hasNextPage, loadNextPage, refresh } =
-    useMovies(getPopularMovies);
+    useMovies();
 
   const handleMovieClick = (movie: Movie) => {
     console.log("영화 클릭:", movie.title);
