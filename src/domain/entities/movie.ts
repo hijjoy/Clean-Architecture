@@ -8,17 +8,37 @@
 /**
  * 영화 도메인 엔티티
  */
-export interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  releaseDate: string;
-  posterPath: string | null;
-  voteAverage: number;
+export class Movie {
+  public readonly id: number;
+  public readonly title: string;
+  public readonly overview: string;
+  public readonly releaseDate: string;
+  public readonly posterPath: string | null;
+  public readonly voteAverage: number;
 
-  // 향후 비즈니스 로직 메서드 추가 가능
-  // isHighRated(): boolean;
-  // isRecent(): boolean;
+  constructor(
+    id: number,
+    title: string,
+    overview: string,
+    releaseDate: string,
+    posterPath: string | null,
+    voteAverage: number
+  ) {
+    this.id = id;
+    this.title = title;
+    this.overview = overview;
+    this.releaseDate = releaseDate;
+    this.posterPath = posterPath;
+    this.voteAverage = voteAverage;
+  }
+
+  /**
+   * 높은 평점의 영화인지 판단
+   * @returns 평점이 8.0 이상이면 true
+   */
+  isHighRated(): boolean {
+    return this.voteAverage >= 8.0;
+  }
 }
 
 /**

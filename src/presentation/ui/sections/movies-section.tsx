@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import type { Movie } from "../../../domain/entities/movie";
 import { useMovies } from "../../hooks/use-movies";
 import { MovieList } from "../components/movie-list";
 
@@ -17,17 +16,12 @@ function MoviesSectionContent() {
   const { movies, loading, error, hasNextPage, loadNextPage, refresh } =
     useMovies();
 
-  const handleMovieClick = (movie: Movie) => {
-    console.log("영화 클릭:", movie.title);
-  };
-
   return (
     <MovieList
       movies={movies}
       loading={loading}
       error={error}
       hasNextPage={hasNextPage}
-      onMovieClick={handleMovieClick}
       onLoadMore={loadNextPage}
       onRefresh={refresh}
     />

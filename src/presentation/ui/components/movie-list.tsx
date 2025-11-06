@@ -1,14 +1,13 @@
-import type { Movie } from '../../../domain/entities/movie'
-import { MovieCard } from './movie-card'
+import type { Movie } from "../../../domain/entities/movie";
+import { MovieCard } from "./movie-card";
 
 interface MovieListProps {
-  movies: Movie[]
-  loading: boolean
-  error: string | null
-  hasNextPage: boolean
-  onMovieClick?: (movie: Movie) => void
-  onLoadMore?: () => void
-  onRefresh?: () => void
+  movies: Movie[];
+  loading: boolean;
+  error: string | null;
+  hasNextPage: boolean;
+  onLoadMore?: () => void;
+  onRefresh?: () => void;
 }
 
 export function MovieList({
@@ -16,7 +15,6 @@ export function MovieList({
   loading,
   error,
   hasNextPage,
-  onMovieClick,
   onLoadMore,
   onRefresh,
 }: MovieListProps) {
@@ -26,22 +24,17 @@ export function MovieList({
         <div>
           <h3>오류가 발생했습니다</h3>
           <p>{error}</p>
-          <button onClick={onRefresh}>
-            다시 시도
-          </button>
+          <button onClick={onRefresh}>다시 시도</button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div>
       <div>
         <h2>인기 영화</h2>
-        <button
-          onClick={onRefresh}
-          disabled={loading}
-        >
+        <button onClick={onRefresh} disabled={loading}>
           새로고침
         </button>
       </div>
@@ -54,7 +47,7 @@ export function MovieList({
 
       <div>
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
 
@@ -66,9 +59,7 @@ export function MovieList({
 
       {hasNextPage && !loading && (
         <div>
-          <button onClick={onLoadMore}>
-            더 보기
-          </button>
+          <button onClick={onLoadMore}>더 보기</button>
         </div>
       )}
 
@@ -78,5 +69,5 @@ export function MovieList({
         </div>
       )}
     </div>
-  )
+  );
 }
