@@ -20,7 +20,7 @@ export class MovieMapper {
       tmdbMovie.id,
       tmdbMovie.title,
       tmdbMovie.overview,
-      tmdbMovie.release_date,
+      new Date(tmdbMovie.release_date),
       tmdbMovie.poster_path,
       tmdbMovie.vote_average
     );

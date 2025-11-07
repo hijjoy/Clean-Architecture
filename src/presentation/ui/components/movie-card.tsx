@@ -28,7 +28,6 @@ function HighRatedBadge({ isHighRated }: HighRatedBadgeProps) {
   );
 }
 
-// 📍 영화 포스터 컴포넌트
 interface MoviePosterProps {
   posterPath: string | null;
   title: string;
@@ -87,12 +86,10 @@ interface MovieInfoProps {
 }
 
 function MovieInfo({ movie }: MovieInfoProps) {
-  const releaseYear = new Date(movie.releaseDate).getFullYear();
-
   return (
     <div className="flex flex-col">
       <MovieTitleHeader title={movie.title} isHighRated={movie.isHighRated()} />
-      <p>{releaseYear}</p>
+      <p>{movie.releaseDate.getFullYear()}</p>
       <MovieRating voteAverage={movie.voteAverage} />
       <p>{movie.overview}</p>
     </div>

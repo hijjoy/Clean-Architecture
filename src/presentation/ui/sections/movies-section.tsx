@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { useMovies } from "../../hooks/use-movies";
 import { MovieList } from "../components/movie-list";
+import { Skeleton } from "../components/skeleton";
+import { MoviesHeader } from "../components/movies-header";
+import { LoadMoreButton } from "../components/load-more-button";
 
 /**
  * 📍 PRESENTATION LAYER - SECTION
@@ -11,47 +14,31 @@ import { MovieList } from "../components/movie-list";
  * - 컴포넌트들을 조합하여 기능 구현
  */
 
-function MoviesSectionContent() {
+export function MoviesSection() {
   // TODO: 추후 tanstack query를 이용하며 수정 예정
   const { movies, loading, error, hasNextPage, loadNextPage, refresh } =
     useMovies();
 
   return (
-    <MovieList
-      movies={movies}
-      loading={loading}
-      error={error}
-      hasNextPage={hasNextPage}
-      onLoadMore={loadNextPage}
-      onRefresh={refresh}
-    />
+    <Suspense fallback={<MoviesSectionSkeleton />}>
+      <MoviesHeader loading={loading} onRefresh={refresh} />
+      <MovieList
+        movies={movies}
+        loading={loading}
+        error={error}
+        hasNextPage={hasNextPage}
+        onLoadMore={loadNextPage}
+        onRefresh={refresh}
+      />
+      <LoadMoreButton
+        hasNextPage={hasNextPage}
+        loading={loading}
+        onLoadMore={loadNextPage}
+      />
+    </Suspense>
   );
 }
 
 function MoviesSectionSkeleton() {
-  return (
-    <div>
-      <div>영화 목록을 불러오는 중...</div>
-    </div>
-  );
+  return <Skeleton message="영화 목록을 불러오는 중..." />;
 }
-
-function MoviesSectionError() {
-  return (
-    <div>
-      <p>영화 목록을 불러오는 중 오류가 발생했습니다.</p>
-    </div>
-  );
-}
-
-export function MoviesSection() {
-  return (
-    <div>
-      <Suspense fallback={<MoviesSectionSkeleton />}>
-        <MoviesSectionContent />
-      </Suspense>
-    </div>
-  );
-}
-
-export { MoviesSectionSkeleton, MoviesSectionError };

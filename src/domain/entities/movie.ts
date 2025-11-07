@@ -13,7 +13,7 @@ export class Movie {
     public readonly id: number,
     public readonly title: string,
     public readonly overview: string,
-    public readonly releaseDate: string,
+    public readonly releaseDate: Date,
     public readonly posterPath: string | null,
     public readonly voteAverage: number
   ) {}
