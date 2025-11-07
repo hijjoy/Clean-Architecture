@@ -1,5 +1,6 @@
-import type { MovieRepository } from "../repositories/movie-repository";
-import type { MovieResponse } from "../entities/movie";
+import type { Pagination } from '../../core/types/pagination.type'
+import type { Movie } from '../entities/movie'
+import type { MovieRepository } from '../repositories/movie-repository'
 
 /**
  * 📍 DOMAIN LAYER - USE CASE
@@ -17,7 +18,7 @@ import type { MovieResponse } from "../entities/movie";
  * - Repository를 통한 데이터 조회
  */
 export class GetPopularMovies {
-  private movieRepository: MovieRepository;
+  private movieRepository: MovieRepository
 
   /**
    * 의존성 주입: Repository 인터페이스를 주입받음
@@ -25,21 +26,21 @@ export class GetPopularMovies {
    * - 테스트하기 쉬움 (Mock Repository 주입 가능)
    */
   constructor(movieRepository: MovieRepository) {
-    this.movieRepository = movieRepository;
+    this.movieRepository = movieRepository
   }
 
   /**
    * UseCase 실행 메서드
    * @param page 조회할 페이지 번호
-   * @returns Promise<MovieResponse> 인기 영화 목록
+   * @returns Promise<Pagination<Movie>> 인기 영화 목록
    */
-  async execute(page: number = 1): Promise<MovieResponse> {
+  async execute(page: number = 1): Promise<Pagination<Movie>> {
     // 비즈니스 규칙: 페이지 번호 검증
     if (page < 1) {
-      throw new Error("페이지 번호는 1 이상이어야 합니다.");
+      throw new Error('페이지 번호는 1 이상이어야 합니다.')
     }
 
     // Repository를 통한 데이터 조회
-    return await this.movieRepository.getPopularMovies(page);
+    return await this.movieRepository.getPopularMovies(page)
   }
 }

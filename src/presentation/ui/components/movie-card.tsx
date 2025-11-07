@@ -1,5 +1,5 @@
-import { getImageUrl } from "../../../core/utils/image-utils";
 import type { MovieUIItem } from "../../types/movie.types";
+import { getImageUrl } from "../../../core/utils/image-utils";
 
 interface MovieCardProps {
   movie: MovieUIItem;
@@ -13,7 +13,6 @@ export function MovieCard({ movie }: MovieCardProps) {
     </div>
   );
 }
-
 
 interface MoviePosterProps {
   posterPath: string | null;
@@ -42,14 +41,14 @@ function MoviePoster({ posterPath, title }: MoviePosterProps) {
 }
 
 interface MovieRatingProps {
-  voteAverage: number;
+  formattedVoteAverage: string;
 }
 
-function MovieRating({ voteAverage }: MovieRatingProps) {
+function MovieRating({ formattedVoteAverage }: MovieRatingProps) {
   return (
     <div>
       <span>⭐</span>
-      <span>{voteAverage.toFixed(1)}</span>
+      <span>{formattedVoteAverage}</span>
     </div>
   );
 }
@@ -75,7 +74,7 @@ function MovieInfo({ movie }: MovieInfoProps) {
     <div className="flex flex-col">
       <MovieTitleHeader title={movie.title} />
       <p>{movie.releaseDate}</p>
-      <MovieRating voteAverage={movie.voteAverage} />
+      <MovieRating formattedVoteAverage={movie.formattedVoteAverage} />
       <p>{movie.overview}</p>
     </div>
   );

@@ -1,8 +1,9 @@
-import { Movie, type MovieResponse } from "../../domain/entities/movie";
+import type { Pagination } from '../../core/types/pagination.type'
+import { Movie } from '../../domain/entities/movie'
 import type {
   TMDBMovieResponse,
   TMDBMoviesResponse,
-} from "../dto/tmdb-movie.dto";
+} from '../dto/tmdb-movie.dto'
 
 /**
  * 📍 DATA LAYER - MAPPER
@@ -23,7 +24,7 @@ export class MovieMapper {
       releaseDate: new Date(tmdbMovie.release_date),
       posterPath: tmdbMovie.poster_path,
       voteAverage: tmdbMovie.vote_average,
-    });
+    })
   }
 
   /**
@@ -31,12 +32,12 @@ export class MovieMapper {
    * - 각 영화 데이터를 Domain Entity로 변환
    * - 페이지네이션 정보 매핑
    */
-  static toDomainResponse(tmdbResponse: TMDBMoviesResponse): MovieResponse {
+  static toDomainResponse(tmdbResponse: TMDBMoviesResponse): Pagination<Movie> {
     return {
       page: tmdbResponse.page,
-      results: tmdbResponse.results.map(this.toDomain), // 각 영화를 Domain Entity로 변환
+      results: tmdbResponse.results.map(MovieMapper.toDomain), // 각 영화를 Domain Entity로 변환
       totalPages: tmdbResponse.total_pages,
       totalResults: tmdbResponse.total_results,
-    };
+    }
   }
 }

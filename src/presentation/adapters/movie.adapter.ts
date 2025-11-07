@@ -1,4 +1,5 @@
-import { Movie } from "../../domain/entities/movie";
+import type { Pagination } from "../../core/types/pagination.type";
+import type { Movie } from "../../domain/entities/movie";
 import type { MovieUIItem, MovieUIResponse } from "../types/movie.types";
 
 /**
@@ -20,7 +21,6 @@ export const MovieAdapter = {
     };
   },
 
-
   /**
    * Movie 엔티티 배열을 UI 아이템 배열로 변환
    */
@@ -29,14 +29,9 @@ export const MovieAdapter = {
   },
 
   /**
-   * MovieResponse를 UI Response로 변환
+   * Pagination<Movie>를 UI Response로 변환
    */
-  toUIResponse(response: {
-    page: number;
-    results: Movie[];
-    totalPages: number;
-    totalResults: number;
-  }): MovieUIResponse {
+  toUIResponse(response: Pagination<Movie>): MovieUIResponse {
     return {
       page: response.page,
       results: this.toUIItems(response.results),

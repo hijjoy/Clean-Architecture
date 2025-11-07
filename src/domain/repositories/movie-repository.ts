@@ -1,4 +1,5 @@
-import type { MovieResponse } from "../entities/movie";
+import type { Pagination } from "../../core/types/pagination.type";
+import type { Movie } from "../entities/movie";
 
 /**
  * 📍 DOMAIN LAYER - REPOSITORY INTERFACE
@@ -18,7 +19,7 @@ export interface MovieRepository {
   /**
    * 인기 영화 목록 조회
    * @param page 페이지 번호 (기본값: 1)
-   * @returns Promise<MovieResponse> 도메인 형태의 영화 목록
+   * @returns Promise<Pagination<Movie>> 도메인 형태의 영화 목록
    */
-  getPopularMovies(page?: number): Promise<MovieResponse>;
+  getPopularMovies(page?: number): Promise<Pagination<Movie>>;
 }

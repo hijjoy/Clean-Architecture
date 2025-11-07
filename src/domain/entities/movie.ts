@@ -6,18 +6,6 @@
  */
 
 /**
- * 영화 생성 파라미터
- */
-export interface MovieParams {
-  id: number;
-  title: string;
-  overview: string;
-  releaseDate: Date;
-  posterPath: string | null;
-  voteAverage: number;
-}
-
-/**
  * 영화 도메인 엔티티
  */
 export class Movie {
@@ -28,7 +16,14 @@ export class Movie {
   private readonly _posterPath: string | null;
   private readonly _voteAverage: number;
 
-  constructor(params: MovieParams) {
+  constructor(params: {
+    id: number;
+    title: string;
+    overview: string;
+    releaseDate: Date;
+    posterPath: string | null;
+    voteAverage: number;
+  }) {
     this._id = params.id;
     this._title = params.title;
     this._overview = params.overview;
@@ -37,7 +32,6 @@ export class Movie {
     this._voteAverage = params.voteAverage;
   }
 
-  // Getter 프로퍼티
   get id(): number {
     return this._id;
   }
@@ -74,16 +68,4 @@ export class Movie {
   hasPoster(): boolean {
     return !!this._posterPath;
   }
-}
-
-/**
- * 영화 목록 응답을 위한 도메인 객체
- * - 페이지네이션 정보 포함
- * - 비즈니스 요구사항에 맞는 구조
- */
-export interface MovieResponse {
-  page: number;
-  results: Movie[];
-  totalPages: number;
-  totalResults: number;
 }

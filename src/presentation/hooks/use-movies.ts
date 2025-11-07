@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import type { MovieResponse } from '../../domain/repositories/movie-repository';
-import { movieContainer } from '../../di';
-import { MovieAdapter } from '../adapters/movie.adapter';
-import type { MovieUIItem } from '../types/movie.types';
+import { useEffect, useState } from "react";
+import type { Pagination } from "../../core/types/pagination.type";
+import { movieContainer } from "../../di";
+import type { Movie } from "../../domain/entities/movie";
+import { MovieAdapter } from "../adapters/movie.adapter";
+import type { MovieUIItem } from "../types/movie.types";
 
 interface UseMoviesState {
   movies: MovieUIItem[];
@@ -30,27 +31,29 @@ export const useMovies = (): UseMoviesReturn => {
   });
 
   const loadMovies = async (page: number = 1, append: boolean = false) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       const getPopularMovies = movieContainer.getPopularMoviesUseCase();
-      const response: MovieResponse = await getPopularMovies.execute(page);
+      const response: Pagination<Movie> = await getPopularMovies.execute(page);
 
       // Domain Entity를 UI Item으로 변환
       const uiResponse = MovieAdapter.toUIResponse(response);
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        movies: append ? [...prev.movies, ...uiResponse.results] : uiResponse.results,
+        movies: append
+          ? [...prev.movies, ...uiResponse.results]
+          : uiResponse.results,
         currentPage: uiResponse.page,
         totalPages: uiResponse.totalPages,
         hasNextPage: uiResponse.hasNextPage,
         loading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to load movies',
+        error: error instanceof Error ? error.message : "Failed to load movies",
         loading: false,
       }));
     }
