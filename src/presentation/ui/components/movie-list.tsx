@@ -1,10 +1,10 @@
-import type { Movie } from "../../../domain/entities/movie";
+import type { MovieUIItem } from "../../types/movie.types";
 import { ErrorMessage } from "./error-message";
 import { LoadingSpinner } from "./loading-spinner";
 import { MovieCard } from "./movie-card";
 
 interface MovieListProps {
-  movies: Movie[];
+  movies: MovieUIItem[];
   loading: boolean;
   error: string | null;
   hasNextPage: boolean;

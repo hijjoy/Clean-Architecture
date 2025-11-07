@@ -21,28 +21,58 @@ export interface MovieParams {
  * 영화 도메인 엔티티
  */
 export class Movie {
-  public readonly id: number;
-  public readonly title: string;
-  public readonly overview: string;
-  public readonly releaseDate: Date;
-  public readonly posterPath: string | null;
-  public readonly voteAverage: number;
+  private readonly _id: number;
+  private readonly _title: string;
+  private readonly _overview: string;
+  private readonly _releaseDate: Date;
+  private readonly _posterPath: string | null;
+  private readonly _voteAverage: number;
 
   constructor(params: MovieParams) {
-    this.id = params.id;
-    this.title = params.title;
-    this.overview = params.overview;
-    this.releaseDate = params.releaseDate;
-    this.posterPath = params.posterPath;
-    this.voteAverage = params.voteAverage;
+    this._id = params.id;
+    this._title = params.title;
+    this._overview = params.overview;
+    this._releaseDate = params.releaseDate;
+    this._posterPath = params.posterPath;
+    this._voteAverage = params.voteAverage;
   }
 
+  // Getter 프로퍼티
+  get id(): number {
+    return this._id;
+  }
+
+  get title(): string {
+    return this._title;
+  }
+
+  get overview(): string {
+    return this._overview;
+  }
+
+  get releaseDate(): Date {
+    return this._releaseDate;
+  }
+
+  get posterPath(): string | null {
+    return this._posterPath;
+  }
+
+  get voteAverage(): number {
+    return this._voteAverage;
+  }
+
+  // 비즈니스 로직 메서드
   /**
    * 높은 평점의 영화인지 판단
    * @returns 평점이 8.0 이상이면 true
    */
   isHighRated(): boolean {
-    return this.voteAverage >= 8.0;
+    return this._voteAverage >= 8.0;
+  }
+
+  hasPoster(): boolean {
+    return !!this._posterPath;
   }
 }
 

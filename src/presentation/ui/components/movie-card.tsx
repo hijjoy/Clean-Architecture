@@ -1,8 +1,8 @@
-import type { Movie } from "../../../domain/entities/movie";
 import { getImageUrl } from "../../../core/utils/image-utils";
+import type { MovieUIItem } from "../../types/movie.types";
 
 interface MovieCardProps {
-  movie: Movie;
+  movie: MovieUIItem;
 }
 
 export function MovieCard({ movie }: MovieCardProps) {
@@ -14,19 +14,6 @@ export function MovieCard({ movie }: MovieCardProps) {
   );
 }
 
-interface HighRatedBadgeProps {
-  isHighRated: boolean;
-}
-
-function HighRatedBadge({ isHighRated }: HighRatedBadgeProps) {
-  if (!isHighRated) return null;
-
-  return (
-    <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs">
-      ⭐ 고평점
-    </span>
-  );
-}
 
 interface MoviePosterProps {
   posterPath: string | null;
@@ -69,27 +56,25 @@ function MovieRating({ voteAverage }: MovieRatingProps) {
 
 interface MovieTitleHeaderProps {
   title: string;
-  isHighRated: boolean;
 }
 
-function MovieTitleHeader({ title, isHighRated }: MovieTitleHeaderProps) {
+function MovieTitleHeader({ title }: MovieTitleHeaderProps) {
   return (
     <div className="flex items-center justify-between">
       <h3>{title}</h3>
-      <HighRatedBadge isHighRated={isHighRated} />
     </div>
   );
 }
 
 interface MovieInfoProps {
-  movie: Movie;
+  movie: MovieUIItem;
 }
 
 function MovieInfo({ movie }: MovieInfoProps) {
   return (
     <div className="flex flex-col">
-      <MovieTitleHeader title={movie.title} isHighRated={movie.isHighRated()} />
-      <p>{movie.releaseDate.getFullYear()}</p>
+      <MovieTitleHeader title={movie.title} />
+      <p>{movie.releaseDate}</p>
       <MovieRating voteAverage={movie.voteAverage} />
       <p>{movie.overview}</p>
     </div>

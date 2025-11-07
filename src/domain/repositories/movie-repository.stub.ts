@@ -1,5 +1,5 @@
-import { Movie, type MovieResponse } from "../entities/movie";
-import type { MovieRepository } from "./movie-repository";
+import { Movie } from "../entities/movie";
+import type { MovieRepository, MovieResponse } from "./movie-repository";
 
 /**
  * Movie Repository Stub

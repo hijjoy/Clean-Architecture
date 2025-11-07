@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import type { Movie, MovieResponse } from '../../domain/entities/movie';
+import type { MovieResponse } from '../../domain/repositories/movie-repository';
 import { movieContainer } from '../../di';
+import { MovieAdapter } from '../adapters/movie.adapter';
+import type { MovieUIItem } from '../types/movie.types';
 
 interface UseMoviesState {
-  movies: Movie[];
+  movies: MovieUIItem[];
   loading: boolean;
   error: string | null;
   currentPage: number;
@@ -34,12 +36,15 @@ export const useMovies = (): UseMoviesReturn => {
       const getPopularMovies = movieContainer.getPopularMoviesUseCase();
       const response: MovieResponse = await getPopularMovies.execute(page);
 
+      // Domain Entity를 UI Item으로 변환
+      const uiResponse = MovieAdapter.toUIResponse(response);
+
       setState(prev => ({
         ...prev,
-        movies: append ? [...prev.movies, ...response.results] : response.results,
-        currentPage: response.page,
-        totalPages: response.totalPages,
-        hasNextPage: response.page < response.totalPages,
+        movies: append ? [...prev.movies, ...uiResponse.results] : uiResponse.results,
+        currentPage: uiResponse.page,
+        totalPages: uiResponse.totalPages,
+        hasNextPage: uiResponse.hasNextPage,
         loading: false,
       }));
     } catch (error) {
