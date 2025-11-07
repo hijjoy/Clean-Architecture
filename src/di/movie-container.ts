@@ -1,5 +1,6 @@
 import { TMDBApiDataSource } from "../data/datasources/tmdb-api-data-source";
 import { MovieRepositoryImpl } from "../data/repositories/movie-repository-impl";
+import { MovieRepositoryStub } from "../domain/repositories/movie-repository.stub";
 import { GetPopularMovies } from "../domain/usecases/get-popular-movies";
 import type { MovieRepository } from "../domain/repositories/movie-repository";
 import {
@@ -84,14 +85,21 @@ export class MovieContainer {
 
   /**
    * Repository 구현체 생성 및 의존성 주입
-   * - DataSource를 주입받아 Repository 구현체 생성
+   * - 환경변수에 따라 실제 구현체 또는 Stub 반환
    * - Domain의 Repository 인터페이스 구현
    */
   getMovieRepository(): MovieRepository {
     if (!this._movieRepository) {
-      this._movieRepository = new MovieRepositoryImpl(
-        this.getTMDBApiDataSource() // DataSource 의존성 주입
-      );
+      // 환경변수로 Mock 사용 여부 결정
+      const useMock = import.meta.env.VITE_USE_MOCK === 'true';
+
+      if (useMock) {
+        this._movieRepository = new MovieRepositoryStub();
+      } else {
+        this._movieRepository = new MovieRepositoryImpl(
+          this.getTMDBApiDataSource() // DataSource 의존성 주입
+        );
+      }
     }
     return this._movieRepository;
   }
@@ -126,6 +134,26 @@ export class MovieContainer {
   setHttpClientConfig(config: HttpClientConfig): void {
     this._httpClientConfig = config;
     // 설정 변경 시 기존 인스턴스 초기화
+    this._httpClient = null;
+    this._tmdbApiDataSource = null;
+    this._movieRepository = null;
+    this._getPopularMovies = null;
+  }
+
+  /**
+   * 테스트용 Repository 강제 설정
+   * 특정 테스트에서 특별한 Stub이나 Mock을 사용하고 싶을 때
+   */
+  setMovieRepository(repository: MovieRepository): void {
+    this._movieRepository = repository;
+    // Repository 변경 시 UseCase도 재생성
+    this._getPopularMovies = null;
+  }
+
+  /**
+   * 모든 인스턴스 초기화 (테스트 간 격리를 위해)
+   */
+  reset(): void {
     this._httpClient = null;
     this._tmdbApiDataSource = null;
     this._movieRepository = null;

@@ -6,17 +6,36 @@
  */
 
 /**
+ * 영화 생성 파라미터
+ */
+export interface MovieParams {
+  id: number;
+  title: string;
+  overview: string;
+  releaseDate: Date;
+  posterPath: string | null;
+  voteAverage: number;
+}
+
+/**
  * 영화 도메인 엔티티
  */
 export class Movie {
-  constructor(
-    public readonly id: number,
-    public readonly title: string,
-    public readonly overview: string,
-    public readonly releaseDate: Date,
-    public readonly posterPath: string | null,
-    public readonly voteAverage: number
-  ) {}
+  public readonly id: number;
+  public readonly title: string;
+  public readonly overview: string;
+  public readonly releaseDate: Date;
+  public readonly posterPath: string | null;
+  public readonly voteAverage: number;
+
+  constructor(params: MovieParams) {
+    this.id = params.id;
+    this.title = params.title;
+    this.overview = params.overview;
+    this.releaseDate = params.releaseDate;
+    this.posterPath = params.posterPath;
+    this.voteAverage = params.voteAverage;
+  }
 
   /**
    * 높은 평점의 영화인지 판단

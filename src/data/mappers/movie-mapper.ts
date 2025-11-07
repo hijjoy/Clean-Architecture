@@ -16,14 +16,14 @@ export class MovieMapper {
    * - 필요한 필드만 선택적으로 매핑
    */
   static toDomain(tmdbMovie: TMDBMovieResponse): Movie {
-    return new Movie(
-      tmdbMovie.id,
-      tmdbMovie.title,
-      tmdbMovie.overview,
-      new Date(tmdbMovie.release_date),
-      tmdbMovie.poster_path,
-      tmdbMovie.vote_average
-    );
+    return new Movie({
+      id: tmdbMovie.id,
+      title: tmdbMovie.title,
+      overview: tmdbMovie.overview,
+      releaseDate: new Date(tmdbMovie.release_date),
+      posterPath: tmdbMovie.poster_path,
+      voteAverage: tmdbMovie.vote_average,
+    });
   }
 
   /**
