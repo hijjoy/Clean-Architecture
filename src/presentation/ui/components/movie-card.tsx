@@ -1,5 +1,4 @@
 import type { MovieUIItem } from "../../types/movie.types";
-import { getImageUrl } from "../../../core/utils/image-utils";
 
 interface MovieCardProps {
   movie: MovieUIItem;
@@ -7,55 +6,50 @@ interface MovieCardProps {
 
 export function MovieCard({ movie }: MovieCardProps) {
   return (
-    <div className="flex flex-col gap-2 p-2 border border-gray-200 rounded-md max-w-[400px] cursor-pointer">
-      <MoviePoster posterPath={movie.posterPath} title={movie.title} />
+    <div className="flex flex-col gap-2 p-2 border border-gray-200 rounded-md max-w-[400px] cursor-pointer relative">
+      {movie.ratingBadge && <MovieBadge ratingBadge={movie.ratingBadge} />}
+      <MoviePoster posterUrl={movie.posterUrl} title={movie.title} />
       <MovieInfo movie={movie} />
     </div>
   );
 }
 
-interface MoviePosterProps {
-  posterPath: string | null;
-  title: string;
-}
+interface MovieBadgeProps extends Pick<MovieUIItem, "ratingBadge"> {}
 
-function MoviePoster({ posterPath, title }: MoviePosterProps) {
-  const posterUrl = getImageUrl(posterPath);
-
+function MovieBadge({ ratingBadge }: MovieBadgeProps) {
   return (
-    <div>
-      {posterUrl ? (
-        <img
-          src={posterUrl}
-          alt={title}
-          loading="lazy"
-          className="size-40 object-cover"
-        />
-      ) : (
-        <div>
-          <span>No Image</span>
-        </div>
-      )}
-    </div>
+    <span className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-md text-xs font-bold z-10">
+      {ratingBadge}
+    </span>
   );
 }
 
-interface MovieRatingProps {
-  formattedVoteAverage: string;
+interface MoviePosterProps extends Pick<MovieUIItem, "posterUrl" | "title"> {}
+
+function MoviePoster({ posterUrl, title }: MoviePosterProps) {
+  return (
+    <img
+      src={posterUrl}
+      alt={title}
+      loading="lazy"
+      className="size-40 object-cover"
+    />
+  );
 }
 
-function MovieRating({ formattedVoteAverage }: MovieRatingProps) {
+interface MovieRatingProps
+  extends Pick<MovieUIItem, "formattedVoteAverage" | "ratingColor"> {}
+
+function MovieRating({ formattedVoteAverage, ratingColor }: MovieRatingProps) {
   return (
-    <div>
+    <div className="flex items-center gap-1">
       <span>⭐</span>
-      <span>{formattedVoteAverage}</span>
+      <span className={ratingColor}>{formattedVoteAverage}</span>
     </div>
   );
 }
 
-interface MovieTitleHeaderProps {
-  title: string;
-}
+interface MovieTitleHeaderProps extends Pick<MovieUIItem, "title"> {}
 
 function MovieTitleHeader({ title }: MovieTitleHeaderProps) {
   return (
@@ -74,7 +68,10 @@ function MovieInfo({ movie }: MovieInfoProps) {
     <div className="flex flex-col">
       <MovieTitleHeader title={movie.title} />
       <p>{movie.releaseDate}</p>
-      <MovieRating formattedVoteAverage={movie.formattedVoteAverage} />
+      <MovieRating
+        formattedVoteAverage={movie.formattedVoteAverage}
+        ratingColor={movie.ratingColor}
+      />
       <p>{movie.overview}</p>
     </div>
   );

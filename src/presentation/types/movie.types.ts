@@ -6,9 +6,11 @@ export interface MovieUIItem {
   title: string;
   overview: string;
   releaseDate: string;
-  posterPath: string | null;
   voteAverage: number;
   formattedVoteAverage: string;
+  ratingBadge: string | null;
+  posterUrl: string;
+  ratingColor: string;
 }
 
 /**
