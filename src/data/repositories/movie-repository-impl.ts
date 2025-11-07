@@ -41,6 +41,6 @@ export class MovieRepositoryImpl implements MovieRepository {
     const res = await this.tmdbApiDataSource.getPopularMovies(page)
 
     // 2. DTO → Domain Entity 변환
-    return MovieMapper.toDomainResponse(res)
+    return MovieMapper.movieListDtoToDomainList(res)
   }
 }

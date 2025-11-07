@@ -38,7 +38,7 @@ export const useMovies = (): UseMoviesReturn => {
       const response: Pagination<Movie> = await getPopularMovies.execute(page);
 
       // Domain Entity를 UI Item으로 변환
-      const uiResponse = MovieAdapter.toUIResponse(response);
+      const uiResponse = MovieAdapter.toUIList(response);
 
       setState((prev) => ({
         ...prev,

@@ -29,9 +29,9 @@ export const MovieAdapter = {
   },
 
   /**
-   * Pagination<Movie>를 UI Response로 변환
+   * Pagination<Movie>를 UI List로 변환
    */
-  toUIResponse(response: Pagination<Movie>): MovieUIResponse {
+  toUIList(response: Pagination<Movie>): MovieUIResponse {
     return {
       page: response.page,
       results: this.toUIItems(response.results),
