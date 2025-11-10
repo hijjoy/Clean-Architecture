@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Pagination } from "../../core/types/pagination.type";
-import { movieContainer } from "../../di";
+import { MovieContainer } from "../../di";
 import type { Movie } from "../../domain/entities/movie";
 import { MovieAdapter } from "../adapters/movie.adapter";
 import type { MovieUIItem } from "../types/movie.types";
@@ -34,7 +34,7 @@ export const useMovies = (): UseMoviesReturn => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const getPopularMovies = movieContainer.getPopularMoviesUseCase();
+      const getPopularMovies = MovieContainer.getPopularMoviesUseCase;
       const response: Pagination<Movie> = await getPopularMovies.execute(page);
 
       // Domain Entity를 UI Item으로 변환

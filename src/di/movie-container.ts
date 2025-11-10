@@ -29,31 +29,16 @@ import { API_CONFIG } from "../core/config/api";
  * - 영화 관련 객체 생성과 관리를 담당
  * - TMDB API, Repository, UseCase 연결
  */
-export class MovieContainer {
-  private static instance: MovieContainer;
-
-  private _httpClient: IHttpClient | null = null;
-  private _tmdbApiDataSource: TMDBApiDataSource | null = null;
-  private _movieRepository: MovieRepository | null = null;
-  private _getPopularMovies: GetPopularMovies | null = null;
+class MovieContainer {
+  private static _httpClient: IHttpClient;
+  private static _tmdbApiDataSource: TMDBApiDataSource;
+  private static _movieRepository: MovieRepository;
 
   // 설정 - 환경별로 다르게 설정 가능
-  private _httpClientConfig: HttpClientConfig = {
+  private static _httpClientConfig: HttpClientConfig = {
     baseUrl: API_CONFIG.BASE_URL,
     timeout: 10_000,
   };
-
-  private constructor() {}
-
-  /**
-   * 싱글톤 패턴: 애플리케이션 전체에서 하나의 Movie 컨테이너만 사용
-   */
-  static getInstance(): MovieContainer {
-    if (!MovieContainer.instance) {
-      MovieContainer.instance = new MovieContainer();
-    }
-    return MovieContainer.instance;
-  }
 
   /**
    * 📍 INFRASTRUCTURE LAYER 의존성 생성
@@ -62,11 +47,8 @@ export class MovieContainer {
    * - 설정을 기반으로 HTTP 클라이언트 생성
    * - 환경별로 다른 설정 적용 가능
    */
-  getHttpClient(): IHttpClient {
-    if (!this._httpClient) {
-      this._httpClient = createHttpClient(this._httpClientConfig);
-    }
-    return this._httpClient;
+  static get httpClient(): IHttpClient {
+    return (this._httpClient ??= createHttpClient(this._httpClientConfig));
   }
 
   /**
@@ -76,11 +58,8 @@ export class MovieContainer {
    * - 외부 API 통신을 담당하는 객체
    * - 싱글톤으로 관리하여 불필요한 인스턴스 생성 방지
    */
-  getTMDBApiDataSource(): TMDBApiDataSource {
-    if (!this._tmdbApiDataSource) {
-      this._tmdbApiDataSource = new TMDBApiDataSource(this.getHttpClient());
-    }
-    return this._tmdbApiDataSource;
+  static get tmdbApiDataSource(): TMDBApiDataSource {
+    return (this._tmdbApiDataSource ??= new TMDBApiDataSource(this.httpClient));
   }
 
   /**
@@ -88,20 +67,19 @@ export class MovieContainer {
    * - 환경변수에 따라 실제 구현체 또는 Stub 반환
    * - Domain의 Repository 인터페이스 구현
    */
-  getMovieRepository(): MovieRepository {
-    if (!this._movieRepository) {
+  static get movieRepository(): MovieRepository {
+    return (this._movieRepository ??= (() => {
       // 환경변수로 Mock 사용 여부 결정
-      const useMock = import.meta.env.VITE_USE_MOCK === 'true';
+      const useMock = import.meta.env.VITE_USE_MOCK === "true";
 
       if (useMock) {
-        this._movieRepository = new MovieRepositoryStub();
+        return new MovieRepositoryStub();
       } else {
-        this._movieRepository = new MovieRepositoryImpl(
-          this.getTMDBApiDataSource() // DataSource 의존성 주입
+        return new MovieRepositoryImpl(
+          this.tmdbApiDataSource // DataSource 의존성 주입
         );
       }
-    }
-    return this._movieRepository;
+    })());
   }
 
   /**
@@ -110,60 +88,21 @@ export class MovieContainer {
    * UseCase 인스턴스 생성 및 의존성 주입
    * - Repository 인터페이스를 주입받음 (구현체가 아닌 인터페이스!)
    * - 비즈니스 로직 실행을 위한 준비
+   * - UseCase는 매번 새로 생성 (상태를 가지지 않으므로)
    */
-  getPopularMoviesUseCase(): GetPopularMovies {
-    if (!this._getPopularMovies) {
-      this._getPopularMovies = new GetPopularMovies(
-        this.getMovieRepository() // Repository 의존성 주입
-      );
-    }
-    return this._getPopularMovies;
-  }
-
-  /**
-   * 📍 설정 관리
-   *
-   * 환경별로 다른 설정 적용을 위한 메서드
-   * - 개발/운영 환경별 다른 baseUrl 설정
-   */
-
-  /**
-   * HTTP 클라이언트 설정 변경
-   * 환경별로 다른 baseUrl, timeout 등 설정 가능
-   */
-  setHttpClientConfig(config: HttpClientConfig): void {
-    this._httpClientConfig = config;
-    // 설정 변경 시 기존 인스턴스 초기화
-    this._httpClient = null;
-    this._tmdbApiDataSource = null;
-    this._movieRepository = null;
-    this._getPopularMovies = null;
+  static get getPopularMoviesUseCase(): GetPopularMovies {
+    return new GetPopularMovies(
+      this.movieRepository // Repository 의존성 주입
+    );
   }
 
   /**
    * 테스트용 Repository 강제 설정
    * 특정 테스트에서 특별한 Stub이나 Mock을 사용하고 싶을 때
    */
-  setMovieRepository(repository: MovieRepository): void {
+  static setMovieRepository(repository: MovieRepository): void {
     this._movieRepository = repository;
-    // Repository 변경 시 UseCase도 재생성
-    this._getPopularMovies = null;
-  }
-
-  /**
-   * 모든 인스턴스 초기화 (테스트 간 격리를 위해)
-   */
-  reset(): void {
-    this._httpClient = null;
-    this._tmdbApiDataSource = null;
-    this._movieRepository = null;
-    this._getPopularMovies = null;
   }
 }
 
-/**
- * 전역 Movie Container 인스턴스
- * - 애플리케이션 어디서든 같은 Movie 컨테이너 사용
- * - 영화 도메인 의존성 일관성 보장
- */
-export const movieContainer = MovieContainer.getInstance();
+export default MovieContainer;

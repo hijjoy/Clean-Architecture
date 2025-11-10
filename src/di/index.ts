@@ -6,11 +6,11 @@
  * - 향후: User, Review 등 도메인별 컨테이너 추가 예정
  *
  * 사용법:
- * import { movieContainer } from "@/src/di";
- * const useCase = movieContainer.getPopularMoviesUseCase();
+ * import MovieContainer from "@/src/di";
+ * const useCase = MovieContainer.getPopularMoviesUseCase;
  */
 
-export { movieContainer, MovieContainer } from "./movie-container";
+export { default as MovieContainer } from "./movie-container";
 
 // 향후 추가될 도메인별 컨테이너들
 // export { userContainer, UserContainer } from "./user-container";

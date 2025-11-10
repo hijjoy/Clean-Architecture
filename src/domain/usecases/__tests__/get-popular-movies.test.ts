@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { MovieRepositoryStub } from '../../repositories/movie-repository.stub'
 import type { MovieRepository } from '../../repositories/movie-repository'
 import { GetPopularMovies } from '../get-popular-movies'
-import { movieContainer } from '../../../di'
+import MovieContainer from '../../../di/movie-container'
 
 describe('GetPopularMovies UseCase', () => {
   let getPopularMovies: GetPopularMovies
@@ -13,10 +13,10 @@ describe('GetPopularMovies UseCase', () => {
     repositoryStub = new MovieRepositoryStub()
 
     // DI Container 초기화 후 stub 주입
-    movieContainer.reset()
-    movieContainer.setMovieRepository(repositoryStub)
+    MovieContainer.reset()
+    MovieContainer.setMovieRepository(repositoryStub)
 
-    getPopularMovies = movieContainer.getPopularMoviesUseCase()
+    getPopularMovies = MovieContainer.getPopularMoviesUseCase
   })
 
   describe('정상 케이스', () => {
