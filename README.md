@@ -19,6 +19,8 @@ src/
 │   │   ├── sections/        # 화면별 섹션
 │   │   └── views/           # 전체 화면
 │   ├── hooks/              # React 커스텀 훅
+│   ├── adapters/           # Domain Entity → UI Model 변환
+│   ├── types/              # UI 전용 타입 정의
 │   └── navigation/         # 라우팅
 │
 ├── 🎯 domain/               # DOMAIN LAYER (비즈니스 핵심)
@@ -85,10 +87,11 @@ src/
 
 ### 📍 DI Container (의존성 주입)
 
-- 싱글톤 패턴으로 의존성 관리
+- **Static Class 패턴**으로 의존성 관리
+- **Nullish coalescing (`??=`)** 으로 싱글톤 구현
 - 계층별 의존성을 순서대로 조립
-- 설정 변경 시 의존성 재생성 지원
-- 인터페이스와 구현체를 연결
+- UseCase는 stateless이므로 매번 새 인스턴스 생성
+- Repository와 DataSource는 싱글톤으로 재사용
 
 ## 데이터 흐름
 
@@ -97,7 +100,7 @@ src/
    ↓ useMovies() Hook 호출
 
 2. 📱 useMovies Hook
-   ↓ movieContainer.getPopularMoviesUseCase() 호출
+   ↓ MovieContainer.getPopularMoviesUseCase (getter 접근)
    ↓ getPopularMovies.execute(page) 호출
 
 3. 🎯 GetPopularMovies UseCase
@@ -117,6 +120,10 @@ src/
 7. 💾 MovieMapper
    ↓ DTO → Domain Entity 변환 (snake_case → camelCase)
 
-8. 📱 UI 리렌더링
-  MovieList → MovieCard 컴포넌트들로 영화 목록 표시
+8. 📱 MovieAdapter
+   ↓ Domain Entity → UI Model 변환
+   ↓ 화면 표시용 데이터 가공 (포스터 URL 생성, 평점 포맷팅 등)
+
+9. 📱 UI 리렌더링
+   MovieList → MovieCard 컴포넌트들로 영화 목록 표시
 ```
